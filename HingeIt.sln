@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HingeIt.Android", "HingeIt\HingeIt.Android\HingeIt.Android.csproj", "{63B2B6C7-3BF1-45FF-AD43-9A03DA04A6E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HingeIt", "HingeIt\HingeIt\HingeIt.csproj", "{73B33371-4900-4100-AB9F-AE6A69499C54}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{63B2B6C7-3BF1-45FF-AD43-9A03DA04A6E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63B2B6C7-3BF1-45FF-AD43-9A03DA04A6E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63B2B6C7-3BF1-45FF-AD43-9A03DA04A6E0}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{63B2B6C7-3BF1-45FF-AD43-9A03DA04A6E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63B2B6C7-3BF1-45FF-AD43-9A03DA04A6E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63B2B6C7-3BF1-45FF-AD43-9A03DA04A6E0}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{73B33371-4900-4100-AB9F-AE6A69499C54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73B33371-4900-4100-AB9F-AE6A69499C54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73B33371-4900-4100-AB9F-AE6A69499C54}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{73B33371-4900-4100-AB9F-AE6A69499C54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73B33371-4900-4100-AB9F-AE6A69499C54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73B33371-4900-4100-AB9F-AE6A69499C54}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0B391236-97DC-4F6D-A670-0EB381016B51}
+	EndGlobalSection
+EndGlobal
