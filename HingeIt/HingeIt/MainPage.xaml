@@ -52,23 +52,29 @@
 
                     <!--#region Game Content -->
                     <StackLayout Grid.Row="1" x:Name="GameStackLayout"
-                         Margin="100" 
-                         VerticalOptions="CenterAndExpand" 
-                         HorizontalOptions="Center" 
-                         Padding="10" >
+                                 Margin="100" 
+                                 VerticalOptions="CenterAndExpand" 
+                                 HorizontalOptions="Center" 
+                                 Padding="10" >
+                        
                         <Label Text="Hinge It!"
-                       TextColor="#F2F2F2"
-                       FontSize="36" 
-                       FontAttributes="Bold" />
+                               TextColor="#d9d9d9"
+                               FontSize="36" 
+                               FontAttributes="Bold" />
 
-                        <Label TextColor="#F2F2F2" 
-                       FontSize="48"  
-                       HorizontalTextAlignment="Center" 
-                       Text="68°" />
+                        <Label FontSize="18"
+                            Text="Tap start and try to hinge you Surface Duo to exact the randomized value below.\Good luck!" />
+
+                        <Label x:Name="AngleTargetLabel"
+                               TextColor="#d9d9d9" 
+                               FontSize="Header"  
+                               HorizontalTextAlignment="Center" 
+                               Text="--°" />
 
                         <Button Text="Start" 
-                        HeightRequest="60" 
-                        HorizontalOptions="FillAndExpand" />
+                                HeightRequest="60" 
+                                HorizontalOptions="FillAndExpand" 
+                                Clicked="Button_Clicked"/>
 
                     </StackLayout>
                     <!--#endregion-->
@@ -85,9 +91,41 @@
         <!--#endregion-->
 
         <!--#region Left pane -->
-        <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
-            <Label Text="Detail" />
-        </StackLayout>
+        <Grid>
+            
+            <!-- Result view -->
+            <yummy:PancakeView BackgroundGradientStartColor="#333333"
+                               BackgroundGradientEndColor="#666666" 
+                               BackgroundGradientAngle="330">
+
+                <Grid>
+
+                    <!-- Large degree container -->
+                    <StackLayout VerticalOptions="CenterAndExpand" 
+                                 HorizontalOptions="CenterAndExpand">
+                        <Label x:Name="ResultAngleLabel" 
+                               Text="25°" 
+                               FontSize="Header" />
+                    </StackLayout>
+
+                    <!-- Sucess container -->
+                    <Label x:Name="ResultSuccessTextLabel"
+                           VerticalOptions="EndAndExpand" 
+                           Margin="0,0,0,120"
+                           HorizontalTextAlignment="Center"
+                           Text="You got it!"
+                           FontSize="Large" />
+                </Grid>
+            </yummy:PancakeView>
+            
+            <!-- Colored dim overlay view -->
+            <Frame x:Name="ResultOverlayFrame" 
+                   BackgroundColor="Red"
+                   Opacity="0.1">
+            </Frame>
+        </Grid>
+
+
     </local:TwoPaneView>
     <!--#endregion-->
 </local:DuoPage>
