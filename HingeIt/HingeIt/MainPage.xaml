@@ -28,7 +28,7 @@
                            Margin="10" 
                            HorizontalTextAlignment="Center" 
                            TextColor="#666666" 
-                           Text="Open Source gamefication app written in Xamarin.Forms" />
+                           Text="Open Source gamification app written in Xamarin.Forms" />
 
                     <!--#region Error content -->
                     <StackLayout Grid.Row="1" 
@@ -58,12 +58,14 @@
                                  Padding="10" >
                         
                         <Label Text="Hinge It!"
+                               HorizontalTextAlignment="Center"
                                TextColor="#d9d9d9"
                                FontSize="36" 
                                FontAttributes="Bold" />
 
-                        <Label FontSize="18"
-                            Text="Tap start and try to hinge you Surface Duo to exact the randomized value below.\Good luck!" />
+                        <Label FontSize="14"
+                               HorizontalTextAlignment="Center"
+                               Text="Tap start and try to hinge you Surface Duo to exact the randomized value below.&#10;Good luck!" />
 
                         <Label x:Name="AngleTargetLabel"
                                TextColor="#d9d9d9" 

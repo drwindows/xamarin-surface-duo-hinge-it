@@ -114,11 +114,11 @@ namespace HingeIt
             // Ensure ticker should tick (abort of stop timer is already set)
             if (stopTimer) return true;
 
-            // Get random angle
-            var randomAngle = random.Next(ANGLE_MIN_VALUE, ANGLE_MAX_VALUE);
+            // Get random angle and store.
+            angleTarget = random.Next(ANGLE_MIN_VALUE, ANGLE_MAX_VALUE);
 
-            // Update label
-            AngleTargetLabel.Text = $"{randomAngle}°";
+            // Update label with three 000 to 360.
+            AngleTargetLabel.Text = $"{angleTarget.ToString("D3")}°";
 
             // Check if timer should be stopped.
             return stopTimer == false;
@@ -133,14 +133,15 @@ namespace HingeIt
         /// <param name="e">Event args.</param>
         private void Button_Clicked(object sender, EventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine(AngleTargetLabel.Text);
             stopTimer = true;
-            ResultAngleLabel.Text = AngleTargetLabel.Text;
         }
 
         private void FormsWindow_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("foo");
+
+            // TODO: Implement "win" logic
+            // TODO: Check how to emulate hinge values.
         }
 
         #endregion
