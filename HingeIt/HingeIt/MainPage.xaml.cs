@@ -1,11 +1,7 @@
-﻿using HingeIt.Utils.MicrosoftDuoLibrary;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xamarin.Forms;
+using Xamarin.Forms.DualScreen;
 
 namespace HingeIt
 {
@@ -14,7 +10,7 @@ namespace HingeIt
     /// the detail page.
     /// </summary>
     [DesignTimeVisible(false)]
-    public partial class MainPage : DuoPage
+    public partial class MainPage : ContentPage
     {
         /// <summary>
         /// Determines the state of the page.
@@ -43,6 +39,16 @@ namespace HingeIt
         }
 
         #region Private member
+
+        /// <summary>
+        /// Determines if the app is spanned across both screens.
+        /// </summary>
+        static bool IsSpanned => DualScreenInfo.Current.SpanMode == TwoPaneViewMode.Wide;
+
+        /// <summary>
+        /// Determines if the app runs in potrait mode.
+        /// </summary>
+        static bool IsPortrait => DualScreenInfo.Current.IsLandscape == false;
 
         /// <summary>
         /// Time span between each angle timer tick.
@@ -93,16 +99,32 @@ namespace HingeIt
             // Update Page to current state.
             UpdatePageToState(GetPageState());
 
-            // Listen on hinge value changes.
-            FormsWindow.PropertyChanged += FormsWindow_PropertyChanged;
-
-            // Start timer
-            Device.StartTimer(ANGLE_CHANGE_TIMEPAN, Timer_Ticked);
+            // Add event listener for changed properties.
+            DualScreenInfo.Current.PropertyChanged += Current_PropertyChanged;
         }
 
         #endregion
 
         #region Event handler
+
+        /// <summary>
+        /// Called on any DualScreenInfo property changed event.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Event args.</param>
+        private void Current_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            // Check if changed property is a layout related one.
+            if (e.PropertyName == "SpanMode")
+            {
+                UpdatePageToState(GetPageState());
+            }
+            // TODO: Listen on angle. Implement win logic.
+            else
+            {
+                Console.WriteLine($"-----> {e.PropertyName}");
+            }
+        }
 
         /// <summary>
         /// Called on each timer tick. 
@@ -136,14 +158,6 @@ namespace HingeIt
             stopTimer = true;
         }
 
-        private void FormsWindow_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            System.Diagnostics.Debug.WriteLine("foo");
-
-            // TODO: Implement "win" logic
-            // TODO: Check how to emulate hinge values.
-        }
-
         #endregion
 
         #region Private helper
@@ -154,11 +168,11 @@ namespace HingeIt
         /// <returns>Current page state.</returns>
         private PageState GetPageState()
         {
-            // It has to be a surface duo.
-            if (FormsWindow.IsDuo == false) return PageState.UnsupportedDevice;
+            // Ensure the app runs on a Surface Duo.
+            if (DualScreenInfo.Current.HingeBounds == null) return PageState.UnsupportedDevice;
 
-            // The app has to be in portrait mode and spanned across both screens.
-            if (!FormsWindow.IsPortrait || !FormsWindow.IsSpanned) return PageState.UnsupportedOrientation;
+            // Ensure that the app is in portrait mode and spanned across both screens.
+            if (!IsSpanned || !IsPortrait) return PageState.UnsupportedOrientation;
 
             // If everything is correct, the game is playable.
             return PageState.Game;
@@ -173,7 +187,20 @@ namespace HingeIt
             ResultSuccessTextLabel.IsVisible = state == PageState.UserSucceeded;
             GameStackLayout.IsVisible = state == PageState.Game;
             ErrorStackLayout.IsVisible = state != PageState.Game;
-            ErrorLabel.Text = GetErrorMessageForState(state);
+            ErrorTitleLabel.Text = GetErrorTitleForState(state);
+            ErrorMessageLabel.Text = GetErrorMessageForState(state);
+
+            if(state == PageState.Game)
+            {
+                // Start timer.
+                stopTimer = false;
+                Device.StartTimer(ANGLE_CHANGE_TIMEPAN, Timer_Ticked);
+            }
+            else
+            {
+                // Elsewise stop timer.
+                stopTimer = true;
+            }
         }
 
         /// <summary>
