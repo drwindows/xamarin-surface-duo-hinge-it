@@ -99,10 +99,9 @@
         <dualScreen:TwoPaneView.Pane2>
             <!--#region Right pane -->
             <Grid>
-                <yummy:PancakeView BackgroundGradientStartColor="#333333"
-                               BackgroundGradientEndColor="#666666" 
-                               BackgroundGradientAngle="330">
-
+                <yummy:PancakeView x:Name="BackgroundView"
+                                   BackgroundGradientStartPoint="1,0" 
+                                   BackgroundGradientEndPoint="1,1">
                     <Grid>
 
                         <!-- Large degree container -->

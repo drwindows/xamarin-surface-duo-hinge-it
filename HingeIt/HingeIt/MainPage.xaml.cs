@@ -103,9 +103,37 @@ namespace HingeIt
             DualScreenInfo.Current.PropertyChanged += Current_PropertyChanged;
         }
 
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            MessagingCenter.Subscribe<string>(this, "HingeSensorChanged", (angel) => {
+                Device.BeginInvokeOnMainThread(() => {
+                    OnHingeSensorChanged(int.Parse(angel));
+                });
+            });
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+
+            MessagingCenter.Unsubscribe<string>(this, "HingeSensorChanged");
+        }
+
         #endregion
 
         #region Event handler
+
+        private void OnHingeSensorChanged(int angle)
+        {
+            ResultAngleLabel.Text = $"{angle:D3}°";
+
+            if (angle == angleTarget)
+            {
+                UpdatePageToState(PageState.UserSucceeded);
+            }
+        }
 
         /// <summary>
         /// Called on any DualScreenInfo property changed event.
@@ -118,11 +146,6 @@ namespace HingeIt
             if (e.PropertyName == "SpanMode")
             {
                 UpdatePageToState(GetPageState());
-            }
-            // TODO: Listen on angle. Implement win logic.
-            else
-            {
-                Console.WriteLine($"-----> {e.PropertyName}");
             }
         }
 
@@ -140,7 +163,7 @@ namespace HingeIt
             angleTarget = random.Next(ANGLE_MIN_VALUE, ANGLE_MAX_VALUE);
 
             // Update label with three 000 to 360.
-            AngleTargetLabel.Text = $"{angleTarget.ToString("D3")}°";
+            AngleTargetLabel.Text = $"{angleTarget:D3}°";
 
             // Check if timer should be stopped.
             return stopTimer == false;
@@ -190,7 +213,13 @@ namespace HingeIt
             ErrorTitleLabel.Text = GetErrorTitleForState(state);
             ErrorMessageLabel.Text = GetErrorMessageForState(state);
 
-            if(state == PageState.Game)
+            var foo = new Xamarin.Forms.PancakeView.GradientStopCollection();
+            foo.Add(new Xamarin.Forms.PancakeView.GradientStop { Color = Color.LightSeaGreen, Offset = 0 });
+            foo.Add(new Xamarin.Forms.PancakeView.GradientStop { Color = Color.DarkOliveGreen, Offset =  0.5f});
+
+            BackgroundView.BackgroundGradientStops = foo;
+
+            if (state == PageState.Game)
             {
                 // Start timer.
                 stopTimer = false;
