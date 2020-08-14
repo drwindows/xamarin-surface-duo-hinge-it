@@ -35,7 +35,7 @@ namespace HingeIt.Droid
             base.OnCreate(savedInstanceState);
 
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
-            global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+            Forms.Init(this, savedInstanceState);
             Xamarin.Forms.DualScreen.DualScreenService.Init(this);
             hingeSensor = new HingeSensor(this);
 

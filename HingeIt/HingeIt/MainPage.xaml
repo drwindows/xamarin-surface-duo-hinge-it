@@ -68,6 +68,7 @@
 
                             <Label FontSize="14"
                                HorizontalTextAlignment="Center"
+                                   TextColor="#d9d9d9"
                                Text="Tap start and try to hinge you Surface Duo to exact the randomized value below.&#10;Good luck!" />
 
                             <Label x:Name="AngleTargetLabel"
@@ -79,17 +80,51 @@
                             <Button Text="Start" 
                                 HeightRequest="60" 
                                 HorizontalOptions="FillAndExpand" 
-                                Clicked="Button_Clicked"/>
+                                Clicked="StartButton_Clicked"/>
 
                         </StackLayout>
                         <!--#endregion-->
 
-                        <!-- Footer -->
+
+                        <!--#region Win Content -->
+                        <StackLayout Grid.Row="1" x:Name="WinStackLayout"
+                                 Margin="100" 
+                                 VerticalOptions="CenterAndExpand" 
+                                 HorizontalOptions="Center" 
+                                 Padding="10" >
+
+                            <Label Text="Success!"
+                               HorizontalTextAlignment="Center"
+                               TextColor="#d9d9d9"
+                               FontSize="36" 
+                               FontAttributes="Bold" />
+
+                            <Label FontSize="14"
+                               HorizontalTextAlignment="Center"
+                                TextColor="#d9d9d9"
+                               Text="Yes, wo found the target angle, congratulations." />
+
+                            <Label x:Name="DurationLabel"
+                               TextColor="#d9d9d9" 
+                               FontSize="Header"  
+                               HorizontalTextAlignment="Center" 
+                               Text="0s" />
+
+                            <Button Text="Share" 
+                                HeightRequest="60" 
+                                HorizontalOptions="FillAndExpand" 
+                                    Clicked="ShareButton_Clicked"/>
+
+                        </StackLayout>
+                        <!--#endregion-->
+
+                        <!--#region Footer -->
                         <Label Grid.Row="2"
                            Margin="10" 
                            HorizontalTextAlignment="Center" 
                            TextColor="#333333" 
                            Text="Proudly made by tscholze, visit tscholze.github.io for further information." />
+                        <!--#endregion-->
                     </Grid>
                 </Grid>
             </yummy:PancakeView>

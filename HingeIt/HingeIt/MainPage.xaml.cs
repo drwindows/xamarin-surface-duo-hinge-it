@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using Xamarin.Forms;
 using Xamarin.Forms.DualScreen;
+using Xamarin.Essentials;
 
 namespace HingeIt
 {
@@ -51,9 +52,14 @@ namespace HingeIt
         static bool IsPortrait => DualScreenInfo.Current.IsLandscape == false;
 
         /// <summary>
+        /// Name of the angle changed event.
+        /// </summary>
+        readonly string ANGLE_CHANGED_EVENT_NAME = "HingeSensorChanged";
+
+        /// <summary>
         /// Time span between each angle timer tick.
         /// </summary>
-        readonly TimeSpan ANGLE_CHANGE_TIMEPAN = TimeSpan.FromSeconds(1);
+        readonly TimeSpan ANGLE_CHANGE_TIMEPAN = TimeSpan.FromMilliseconds(500);
 
         /// <summary>
         /// Minimum possible angle of the hinge.
@@ -68,14 +74,34 @@ namespace HingeIt
         readonly int ANGLE_MAX_VALUE = 360;
 
         /// <summary>
+        /// Threshold for the target (+-).
+        /// </summary>
+        readonly int ANGLE_THRESHOLD = 5;
+
+        /// <summary>
         /// Angle target which the player has to find.
         /// </summary>
-        int angleTarget;
+        int targetAngle;
+
+        /// <summary>
+        /// Current angle of the device.
+        /// </summary>
+        int currentAngle;
 
         /// <summary>
         /// Determines if the timer should stop.
         /// </summary>
-        bool stopTimer = false;
+        bool stopTargetRandomizerTimer = false;
+
+        /// <summary>
+        /// Hinging start time
+        /// </summary>
+        DateTime hingingStartTime;
+
+        /// <summary>
+        /// Sensor events will be ignored.
+        /// </summary>
+        bool ingoreSensorEvents = true;
 
         /// <summary>
         /// Underlying random engine.
@@ -97,7 +123,7 @@ namespace HingeIt
             InitializeComponent();
 
             // Update Page to current state.
-            UpdatePageToState(GetPageState());
+            UpdateUi();
 
             // Add event listener for changed properties.
             DualScreenInfo.Current.PropertyChanged += Current_PropertyChanged;
@@ -107,9 +133,9 @@ namespace HingeIt
         {
             base.OnAppearing();
 
-            MessagingCenter.Subscribe<string>(this, "HingeSensorChanged", (angel) => {
+            MessagingCenter.Subscribe<string>(this, ANGLE_CHANGED_EVENT_NAME, (angle) => {
                 Device.BeginInvokeOnMainThread(() => {
-                    OnHingeSensorChanged(int.Parse(angel));
+                    OnHingeSensorChanged(int.Parse(angle));
                 });
             });
         }
@@ -118,7 +144,7 @@ namespace HingeIt
         {
             base.OnDisappearing();
 
-            MessagingCenter.Unsubscribe<string>(this, "HingeSensorChanged");
+            MessagingCenter.Unsubscribe<string>(this, ANGLE_CHANGED_EVENT_NAME);
         }
 
         #endregion
@@ -127,12 +153,13 @@ namespace HingeIt
 
         private void OnHingeSensorChanged(int angle)
         {
-            ResultAngleLabel.Text = $"{angle:D3}°";
+            // Store current angle.
+            currentAngle = angle;
 
-            if (angle == angleTarget)
-            {
-                UpdatePageToState(PageState.UserSucceeded);
-            }
+            if (ingoreSensorEvents) return;
+
+            // Update page.
+            UpdateUi();
         }
 
         /// <summary>
@@ -145,7 +172,7 @@ namespace HingeIt
             // Check if changed property is a layout related one.
             if (e.PropertyName == "SpanMode")
             {
-                UpdatePageToState(GetPageState());
+                UpdateUi();
             }
         }
 
@@ -157,28 +184,40 @@ namespace HingeIt
         private bool Timer_Ticked()
         {
             // Ensure ticker should tick (abort of stop timer is already set)
-            if (stopTimer) return true;
+            if (stopTargetRandomizerTimer) return true;
 
             // Get random angle and store.
-            angleTarget = random.Next(ANGLE_MIN_VALUE, ANGLE_MAX_VALUE);
+            targetAngle = random.Next(ANGLE_MIN_VALUE, ANGLE_MAX_VALUE);
 
             // Update label with three 000 to 360.
-            AngleTargetLabel.Text = $"{angleTarget:D3}°";
+            AngleTargetLabel.Text = $"{targetAngle:D3}°";
 
             // Check if timer should be stopped.
-            return stopTimer == false;
+            return stopTargetRandomizerTimer == false;
         }
 
         /// <summary>
-        /// Start button  tapped.
+        /// Start button tapped.
         /// 
         /// Stops the timer and starts the actual game.
         /// </summary>
         /// <param name="sender">Button as sender</param>
         /// <param name="e">Event args.</param>
-        private void Button_Clicked(object sender, EventArgs e)
+        private void StartButton_Clicked(object sender, EventArgs e)
         {
-            stopTimer = true;
+            stopTargetRandomizerTimer = true;
+            hingingStartTime = DateTime.Now;
+            UpdateUi();
+        }
+
+        /// <summary>
+        /// Share button tapped.
+        /// </summary>
+        /// <param name="sender">Button as sender</param>
+        /// <param name="e">Event args.</param>
+        private void ShareButton_Clicked(object sender, EventArgs e)
+        {
+            PresentShareSheet();
         }
 
         #endregion
@@ -197,39 +236,107 @@ namespace HingeIt
             // Ensure that the app is in portrait mode and spanned across both screens.
             if (!IsSpanned || !IsPortrait) return PageState.UnsupportedOrientation;
 
+            // Check if current angle is within target threshold
+            if (currentAngle != 0 && currentAngle >= targetAngle - ANGLE_THRESHOLD && currentAngle <= targetAngle + ANGLE_THRESHOLD) return PageState.UserSucceeded;
+
             // If everything is correct, the game is playable.
             return PageState.Game;
         }
 
         /// <summary>
-        /// Updates the page to given state.
+        /// Updates the page.
         /// </summary>
-        /// <param name="state">State to update UI for.</param>
-        private void UpdatePageToState(PageState state)
+        private void UpdateUi()
         {
+            // Get current state.
+            var state = GetPageState();
+
+            // Update controls.
             ResultSuccessTextLabel.IsVisible = state == PageState.UserSucceeded;
             GameStackLayout.IsVisible = state == PageState.Game;
+            WinStackLayout.IsVisible = state == PageState.UserSucceeded;
             ErrorStackLayout.IsVisible = state != PageState.Game;
             ErrorTitleLabel.Text = GetErrorTitleForState(state);
             ErrorMessageLabel.Text = GetErrorMessageForState(state);
+            BackgroundView.BackgroundGradientStops = GetGradientForState(state);
+            ingoreSensorEvents = true;
 
-            var foo = new Xamarin.Forms.PancakeView.GradientStopCollection();
-            foo.Add(new Xamarin.Forms.PancakeView.GradientStop { Color = Color.LightSeaGreen, Offset = 0 });
-            foo.Add(new Xamarin.Forms.PancakeView.GradientStop { Color = Color.DarkOliveGreen, Offset =  0.5f});
-
-            BackgroundView.BackgroundGradientStops = foo;
-
-            if (state == PageState.Game)
+            // Check for diffrent state combinations.
+            if (state == PageState.Game && !stopTargetRandomizerTimer)
             {
                 // Start timer.
-                stopTimer = false;
                 Device.StartTimer(ANGLE_CHANGE_TIMEPAN, Timer_Ticked);
+            }
+            else if (state == PageState.Game && stopTargetRandomizerTimer)
+            {
+                ingoreSensorEvents = false;
+                ResultAngleLabel.Text = $"{currentAngle:D3}°";
+                BackgroundView.BackgroundGradientStops = GetGradientCurrentAngle();
+            }
+            else if (state == PageState.UserSucceeded)
+            {
+
+                ResultAngleLabel.Text = $"{targetAngle:D3}°";
+                DurationLabel.Text = $"{(DateTime.Now - hingingStartTime).Seconds}s";
             }
             else
             {
-                // Elsewise stop timer.
-                stopTimer = true;
+                ResultAngleLabel.Text = "? °";
             }
+        }
+
+        /// <summary>
+        /// Gets the background gradient stops according to the current angle.
+        /// </summary>
+        /// <returns>Gradient stops according to the current an angle.</returns>
+        private Xamarin.Forms.PancakeView.GradientStopCollection GetGradientCurrentAngle()
+        {
+            if (Math.Abs(targetAngle - currentAngle) < 45)
+            {
+                return new Xamarin.Forms.PancakeView.GradientStopCollection
+                        {
+                            new Xamarin.Forms.PancakeView.GradientStop { Color = Color.DarkOrange, Offset = 0 },
+                            new Xamarin.Forms.PancakeView.GradientStop { Color = Color.OrangeRed, Offset = 0.5f }
+                        };
+            }
+            else
+            {
+                return new Xamarin.Forms.PancakeView.GradientStopCollection
+                        {
+                        new Xamarin.Forms.PancakeView.GradientStop { Color = Color.IndianRed, Offset = 0 },
+                        new Xamarin.Forms.PancakeView.GradientStop { Color = Color.DarkRed, Offset = 0.5f }
+                        };
+            }
+        }
+
+        /// <summary>
+        /// Gets the background gradient stops according to the current state.
+        /// </summary>
+        /// <returns>Gradient stops according to the current an state.</returns>
+        private Xamarin.Forms.PancakeView.GradientStopCollection GetGradientForState(PageState state)
+        {
+            switch(state)
+            {
+                case PageState.UnsupportedDevice:
+                case PageState.UnsupportedOrientation:
+                    return new Xamarin.Forms.PancakeView.GradientStopCollection
+                    {
+                        new Xamarin.Forms.PancakeView.GradientStop { Color = Color.Gray, Offset = 0 },
+                        new Xamarin.Forms.PancakeView.GradientStop { Color = Color.DarkGray, Offset = 0.5f }
+                    };
+
+                case PageState.Game:
+                    return GetGradientCurrentAngle();
+
+                case PageState.UserSucceeded:
+                    return new Xamarin.Forms.PancakeView.GradientStopCollection
+                    {
+                        new Xamarin.Forms.PancakeView.GradientStop { Color = Color.LightSeaGreen, Offset = 0 },
+                        new Xamarin.Forms.PancakeView.GradientStop { Color = Color.DarkOliveGreen, Offset = 0.5f }
+                    };
+            }
+
+            return new Xamarin.Forms.PancakeView.GradientStopCollection();
         }
 
         /// <summary>
@@ -270,6 +377,18 @@ namespace HingeIt
                 default:
                     return "";
             }
+        }
+
+        /// <summary>
+        /// Presents async a share sheet with a win message.
+        /// </summary>
+        private async void PresentShareSheet()
+        {
+            await Share.RequestAsync(new ShareTextRequest
+            {
+                Title = "Share your score!",
+                Text = $"It took only {DurationLabel.Text} to hinge my Surface Duo correctly! #HingeIt"
+            });
         }
 
         #endregion
