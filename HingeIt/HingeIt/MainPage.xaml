@@ -1,22 +1,22 @@
 ﻿<ContentPage
-    xmlns:dualScreen="clr-namespace:Xamarin.Forms.DualScreen;assembly=Xamarin.Forms.DualScreen"
-    xmlns:yummy="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+    x:Class="HingeIt.MainPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:dualScreen="clr-namespace:Xamarin.Forms.DualScreen;assembly=Xamarin.Forms.DualScreen"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    x:Class="HingeIt.MainPage"
-    BackgroundColor="#333333">
+    xmlns:yummy="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+    BackgroundColor="#333333"
+    mc:Ignorable="d">
 
-    <dualScreen:TwoPaneView MinWideModeWidth="4000" 
-                            MinTallModeHeight="4000">
+    <dualScreen:TwoPaneView MinTallModeHeight="4000" MinWideModeWidth="4000">
 
         <dualScreen:TwoPaneView.Pane1>
-            <!--#region Left pane -->
-            <yummy:PancakeView BackgroundGradientStartColor="#333333"
-                           BackgroundGradientEndColor="#666666" 
-                           BackgroundGradientAngle="30">
+            <!--#region Left pane-->
+            <yummy:PancakeView
+                BackgroundGradientAngle="30"
+                BackgroundGradientEndColor="#666666"
+                BackgroundGradientStartColor="#333333">
 
                 <Grid>
                     <Grid>
@@ -26,104 +26,120 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-                        <!-- Header -->
-                        <Label Grid.Row="0" 
-                           Margin="10" 
-                           HorizontalTextAlignment="Center" 
-                           TextColor="#666666" 
-                           Text="Open Source gamification app written in Xamarin.Forms" />
+                        <!--  Header  -->
+                        <Label
+                            Grid.Row="0"
+                            Margin="10"
+                            HorizontalTextAlignment="Center"
+                            Text="Open Source gamification app written in Xamarin.Forms"
+                            TextColor="#666666" />
 
-                        <!--#region Error content -->
-                        <StackLayout Grid.Row="1" 
-                                 x:Name="ErrorStackLayout"
-                                 VerticalOptions="CenterAndExpand" 
-                                 HorizontalOptions="Center"
-                                 Padding="60">
+                        <!--#region Error content-->
+                        <StackLayout
+                            x:Name="ErrorStackLayout"
+                            Grid.Row="1"
+                            Padding="60"
+                            HorizontalOptions="Center"
+                            VerticalOptions="CenterAndExpand">
 
-                            <Label x:Name="ErrorTitleLabel" 
-                               FontSize="Large"
-                               TextColor="#F2F2F2" 
-                               HorizontalTextAlignment="Center" />
+                            <Label
+                                x:Name="ErrorTitleLabel"
+                                FontSize="Large"
+                                HorizontalTextAlignment="Center"
+                                TextColor="#F2F2F2" />
 
-                            <Label x:Name="ErrorMessageLabel" 
-                               FontSize="Medium"
-                               TextColor="PaleVioletRed"
-                               HorizontalTextAlignment="Center"/>
-
-                        </StackLayout>
-                        <!--#endregion-->
-
-                        <!--#region Game Content -->
-                        <StackLayout Grid.Row="1" x:Name="GameStackLayout"
-                                 Margin="100" 
-                                 VerticalOptions="CenterAndExpand" 
-                                 HorizontalOptions="Center" 
-                                 Padding="10" >
-
-                            <Label Text="Hinge It!"
-                               HorizontalTextAlignment="Center"
-                               TextColor="#d9d9d9"
-                               FontSize="36" 
-                               FontAttributes="Bold" />
-
-                            <Label FontSize="14"
-                               HorizontalTextAlignment="Center"
-                                   TextColor="#d9d9d9"
-                               Text="Tap start and try to hinge you Surface Duo to exact the randomized value below.&#10;Good luck!" />
-
-                            <Label x:Name="AngleTargetLabel"
-                               TextColor="#d9d9d9" 
-                               FontSize="Header"  
-                               HorizontalTextAlignment="Center" 
-                               Text="--°" />
-
-                            <Button Text="Start" 
-                                HeightRequest="60" 
-                                HorizontalOptions="FillAndExpand" 
-                                Clicked="StartButton_Clicked"/>
+                            <Label
+                                x:Name="ErrorMessageLabel"
+                                FontSize="Medium"
+                                HorizontalTextAlignment="Center"
+                                TextColor="PaleVioletRed" />
 
                         </StackLayout>
                         <!--#endregion-->
 
+                        <!--#region Game Content-->
+                        <StackLayout
+                            x:Name="GameStackLayout"
+                            Grid.Row="1"
+                            Margin="100"
+                            Padding="10"
+                            HorizontalOptions="Center"
+                            VerticalOptions="CenterAndExpand">
 
-                        <!--#region Win Content -->
-                        <StackLayout Grid.Row="1" x:Name="WinStackLayout"
-                                 Margin="100" 
-                                 VerticalOptions="CenterAndExpand" 
-                                 HorizontalOptions="Center" 
-                                 Padding="10" >
+                            <Label
+                                FontAttributes="Bold"
+                                FontSize="36"
+                                HorizontalTextAlignment="Center"
+                                Text="Hinge It!"
+                                TextColor="#d9d9d9" />
 
-                            <Label Text="Success!"
-                               HorizontalTextAlignment="Center"
-                               TextColor="#d9d9d9"
-                               FontSize="36" 
-                               FontAttributes="Bold" />
+                            <Label
+                                FontSize="14"
+                                HorizontalTextAlignment="Center"
+                                Text="Tap start and try to hinge you Surface Duo to exact the randomized value below.&#10;Good luck!"
+                                TextColor="#d9d9d9" />
 
-                            <Label FontSize="14"
-                               HorizontalTextAlignment="Center"
-                                TextColor="#d9d9d9"
-                               Text="Yes, wo found the target angle, congratulations." />
+                            <Label
+                                x:Name="AngleTargetLabel"
+                                FontSize="Header"
+                                HorizontalTextAlignment="Center"
+                                Text="--°"
+                                TextColor="#d9d9d9" />
 
-                            <Label x:Name="DurationLabel"
-                               TextColor="#d9d9d9" 
-                               FontSize="Header"  
-                               HorizontalTextAlignment="Center" 
-                               Text="0s" />
-
-                            <Button Text="Share" 
-                                HeightRequest="60" 
-                                HorizontalOptions="FillAndExpand" 
-                                    Clicked="ShareButton_Clicked"/>
+                            <Button
+                                Clicked="StartButton_Clicked"
+                                HeightRequest="60"
+                                HorizontalOptions="FillAndExpand"
+                                Text="Start" />
 
                         </StackLayout>
                         <!--#endregion-->
 
-                        <!--#region Footer -->
-                        <Label Grid.Row="2"
-                           Margin="10" 
-                           HorizontalTextAlignment="Center" 
-                           TextColor="#333333" 
-                           Text="Proudly made by tscholze, visit tscholze.github.io for further information." />
+                        <!--#region Win Content-->
+                        <StackLayout
+                            x:Name="WinStackLayout"
+                            Grid.Row="1"
+                            Margin="100"
+                            Padding="10"
+                            HorizontalOptions="Center"
+                            VerticalOptions="CenterAndExpand">
+
+                            <Label
+                                FontAttributes="Bold"
+                                FontSize="36"
+                                HorizontalTextAlignment="Center"
+                                Text="Success!"
+                                TextColor="#d9d9d9" />
+
+                            <Label
+                                FontSize="14"
+                                HorizontalTextAlignment="Center"
+                                Text="Yes, wo found the target angle, congratulations."
+                                TextColor="#d9d9d9" />
+
+                            <Label
+                                x:Name="DurationLabel"
+                                FontSize="Header"
+                                HorizontalTextAlignment="Center"
+                                Text="0s"
+                                TextColor="#d9d9d9" />
+
+                            <Button
+                                Clicked="ShareButton_Clicked"
+                                HeightRequest="60"
+                                HorizontalOptions="FillAndExpand"
+                                Text="Share" />
+
+                        </StackLayout>
+                        <!--#endregion-->
+
+                        <!--#region Footer-->
+                        <Label
+                            Grid.Row="2"
+                            Margin="10"
+                            HorizontalTextAlignment="Center"
+                            Text="Proudly made by tscholze, visit tscholze.github.io for further information."
+                            TextColor="#333333" />
                         <!--#endregion-->
                     </Grid>
                 </Grid>
@@ -132,36 +148,38 @@
         </dualScreen:TwoPaneView.Pane1>
 
         <dualScreen:TwoPaneView.Pane2>
-            <!--#region Right pane -->
+            <!--#region Right pane-->
             <Grid>
-                <yummy:PancakeView x:Name="BackgroundView"
-                                   BackgroundGradientStartPoint="1,0" 
-                                   BackgroundGradientEndPoint="1,1">
+                <yummy:PancakeView
+                    x:Name="BackgroundView"
+                    BackgroundGradientEndPoint="1,1"
+                    BackgroundGradientStartPoint="1,0">
                     <Grid>
 
-                        <!-- Large degree container -->
-                        <StackLayout VerticalOptions="CenterAndExpand" 
-                                 HorizontalOptions="CenterAndExpand">
-                            <Label x:Name="ResultAngleLabel" 
-                               Text="25°" 
-                               FontSize="Header" />
+                        <!--  Large degree container  -->
+                        <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                            <Label
+                                x:Name="ResultAngleLabel"
+                                FontSize="Header"
+                                Text="25°" />
                         </StackLayout>
 
-                        <!-- Sucess container -->
-                        <Label x:Name="ResultSuccessTextLabel"
-                           VerticalOptions="EndAndExpand" 
-                           Margin="0,0,0,120"
-                           HorizontalTextAlignment="Center"
-                           Text="You got it!"
-                           FontSize="Large" />
+                        <!--  Sucess container  -->
+                        <Label
+                            x:Name="ResultSuccessTextLabel"
+                            Margin="0,0,0,120"
+                            FontSize="Large"
+                            HorizontalTextAlignment="Center"
+                            Text="You got it!"
+                            VerticalOptions="EndAndExpand" />
                     </Grid>
                 </yummy:PancakeView>
 
-                <!-- Colored dim overlay view -->
-                <Frame x:Name="ResultOverlayFrame" 
-                   BackgroundColor="Red"
-                   Opacity="0.1">
-                </Frame>
+                <!--  Colored dim overlay view  -->
+                <Frame
+                    x:Name="ResultOverlayFrame"
+                    BackgroundColor="Red"
+                    Opacity="0.1" />
             </Grid>
             <!--#endregion-->
         </dualScreen:TwoPaneView.Pane2>
