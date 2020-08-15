@@ -151,6 +151,11 @@ namespace HingeIt
 
         #region Event handler
 
+        /// <summary>
+        /// Called when ever an `ANGLE_CHANGED_EVENT_NAME` notification
+        /// is raised.
+        /// </summary>
+        /// <param name="angle">New angle value.</param>
         private void OnHingeSensorChanged(int angle)
         {
             // Store current angle.
@@ -220,6 +225,19 @@ namespace HingeIt
             PresentShareSheet();
         }
 
+        /// <summary>
+        /// Try again button tapped.
+        /// </summary>
+        /// <param name="sender">Button as sender</param>
+        /// <param name="e">Event args.</param>
+        private void TryAgainButton_Clicked(object sender, EventArgs e)
+        {
+            // Reset app state.
+            targetAngle = 0;
+            stopTargetRandomizerTimer = false;
+            UpdateUi();
+        }
+
         #endregion
 
         #region Private helper
@@ -244,7 +262,7 @@ namespace HingeIt
         }
 
         /// <summary>
-        /// Updates the page.
+        /// Updates the page to current state.
         /// </summary>
         private void UpdateUi()
         {

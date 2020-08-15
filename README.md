@@ -5,7 +5,17 @@
 The game randomizes an angle value. After the player taps on "Start", the player has to hinge / fold the Microsoft Surface Duo as fast as possible into the target angle.
 
 ## Game states
+
+**Mocked**
 ![Summary](docs/summary.png)
+
+## Open questions
+
+- Is the game playable on an actual device?
+- Check for min and max angles of real devices
+- Should be the device in an 180° position?
+- Is the angle treshold of 5 degrees a good choice?
+- Does angles of 0 and 360 count as not spanned?
 
 ## Caution
 Due to the early days of the Surface Duo emulator, the app is missing the hinge angle value reading. You cannot fold your Desktop - hopefully. I try to update this project with new features until it is actual playable.

@@ -130,6 +130,13 @@
                                 HorizontalOptions="FillAndExpand"
                                 Text="Share" />
 
+                            <Button
+                                Clicked="TryAgainButton_Clicked"
+                                HeightRequest="60"
+                                HorizontalOptions="FillAndExpand"
+                                Text="Try again" />
+
+
                         </StackLayout>
                         <!--#endregion-->
 
