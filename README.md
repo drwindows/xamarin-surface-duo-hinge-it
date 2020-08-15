@@ -17,9 +17,9 @@ The game randomizes an angle value. After the player taps on "Start", the player
 - Do angles of 0 and 360 count as not spanned?
 
 ## Simulate hinge angle changes
-Use the `Virtual sensors` / `Pressure (hPa)` slider with values from 0 to 360 to simulate a hinge use.
+Use the `Virtual sensors` / `Pressure (hPa)` settings slider with values from 0 to 360 to simulate a hinge use.
 
-![Hinge value](docs/sensor.PNG)
+![Hinge value](docs/sensor.png)
 
 ## Authors
 Just me, [Tobi]([https://tscholze.github.io).
